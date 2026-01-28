@@ -4,8 +4,6 @@ import { createTable } from "$tables/insights.ts";
 type Input = HasDBClient;
 
 export default (input: Input): void => {
-  console.log(`Creating insight table`);
-
   input.db.exec(createTable);
 
   console.log("Insight table created successfully!");

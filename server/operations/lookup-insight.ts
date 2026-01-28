@@ -7,7 +7,7 @@ type Input = HasDBClient & {
 };
 
 export default (input: Input): Insight | undefined => {
-  console.log(`Looking up insight for id=${input.id}`);
+  console.log(`Looking up insight for ID=${input.id}...`);
 
   const [row] = input.db
     .sql<
@@ -20,6 +20,5 @@ export default (input: Input): Insight | undefined => {
     return result;
   }
 
-  console.log("Insight not found");
   return;
 };

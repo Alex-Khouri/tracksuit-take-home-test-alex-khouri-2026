@@ -7,8 +7,9 @@ import listInsights from "./operations/list-insights.ts";
 import lookupInsight from "./operations/lookup-insight.ts";
 import createInsightTable from "./operations/create-insight-table.ts";
 import createInsight from "./operations/create-insight.ts";
+import deleteInsight from "./operations/delete-insight.ts";
 
-console.log("Loading configuration");
+console.log("Loading configuration...");
 
 const env = {
   port: Port.parse(Deno.env.get("SERVER_PORT")),
@@ -16,14 +17,14 @@ const env = {
 
 const dbFilePath = path.resolve("tmp", "db.sqlite3");
 
-console.log(`Opening SQLite database at ${dbFilePath}`);
+console.log(`Opening SQLite database at ${dbFilePath}...`);
 
 await Deno.mkdir(path.dirname(dbFilePath), { recursive: true });
 const db = new Database(dbFilePath);
 
 createInsightTable({ db });
 
-console.log("Initialising server");
+console.log("Initialising server...");
 
 const router = new oak.Router();
 
@@ -43,7 +44,6 @@ router.get("/insights", (ctx) => {
     const result = listInsights({ db });
     ctx.response.status = 200;
     ctx.response.body = result;
-    console.log("/insights API processing completed successfully");
   } catch (error) {
     console.log(`INTERNAL SERVER ERROR (/insights): ${error}`);
     ctx.response.status = 500;
@@ -73,12 +73,6 @@ router.post("/insights/create", async (ctx) => {
     const textValue = value.text;
     const createdAtValue = new Date(value.createdAt);
 
-    console.log("CREATING NEW INSIGHT WITH THE FOLLOWING:");
-    console.log(`    Brand: ${brandValue}`);
-    console.log(`    Text: ${textValue}`);
-    console.log(`    Created At: ${createdAtValue}`);
-
-    // TODO: Create Insight object and add it to database
     const result = createInsight({
       db,
       brand: brandValue,
@@ -95,10 +89,10 @@ router.post("/insights/create", async (ctx) => {
   }
 });
 
-router.get("/insights/delete", (ctx) => {
+router.delete("/insights/delete/:id", (ctx) => {
   try {
-    // TODO: Finish this
-
+    const params = ctx.params as Record<string, any>;
+    deleteInsight({ db, id: params.id });
     ctx.response.status = 200;
     ctx.response.body = { success: true };
   } catch (error) {

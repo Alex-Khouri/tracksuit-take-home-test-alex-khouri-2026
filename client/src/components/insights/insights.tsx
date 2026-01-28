@@ -9,8 +9,19 @@ type InsightsProps = {
 };
 
 export const Insights = ({ insights, className }: InsightsProps) => {
-  const deleteInsight = () => {
-	console.log("*** INSIGHT DELETED ***")
+
+  const deleteInsight = async (id: number) => {
+		const response = await fetch(`/api/insights/delete/${id}`, {
+			method: 'DELETE',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		});
+
+		if (!response.ok) {
+			const errorData = await response.json();
+			throw new Error(`HTTP ERROR\nStatus: ${response.status}\nDetails: ${errorData.message || 'Unknown error'}`);
+		}
   };
 
   return (
@@ -27,7 +38,7 @@ export const Insights = ({ insights, className }: InsightsProps) => {
                     <span>{date.toString()}</span>
                     <Trash2Icon
                       className={styles["insight-delete"]}
-                      onClick={deleteInsight}
+                      onClick={() => deleteInsight(id)}
                     />
                   </div>
                 </div>

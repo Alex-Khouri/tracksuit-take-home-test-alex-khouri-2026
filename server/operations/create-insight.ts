@@ -10,8 +10,6 @@ type Input = HasDBClient & {
 };
 
 export default (input: Input): Insight | undefined => {
-  console.log(`Creating insight for brand=${input.brand}`);
-
   const insert: insightsTable.Insert = {
     brand: input.brand,
     text: input.text,
@@ -29,6 +27,6 @@ export default (input: Input): Insight | undefined => {
     return result;
   }
 
-  console.log("Insight not found");
+  console.log(`ERROR: Failed to create insight`);
   return;
 };

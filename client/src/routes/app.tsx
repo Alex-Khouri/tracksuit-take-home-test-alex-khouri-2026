@@ -14,7 +14,6 @@ export const App = () => {
 		const loadInsights = async () => {
 			const result = await fetch("/api/insights");
 			const json = await result.json();
-			console.log(json);
 
 			const updatedInsights = json.map((raw: any) =>
 				Insight.parse({

@@ -18,10 +18,6 @@ export const AddInsight = (props: AddInsightProps) => {
 
   const addInsight = async (_event: React.FormEvent<HTMLFormElement>) => {
 		const dateString: string = new Date().toISOString();
-		console.log(`*** Insight added with content: ***`);
-		console.log(`    Brand:  ${selectedBrand}`)
-		console.log(`    Text:  ${insightText}`)
-		console.log(`    Created At:  ${dateString}`)
 
 		const postData: PostInsightData = {
 			brand: selectedBrand,
@@ -45,12 +41,10 @@ export const AddInsight = (props: AddInsightProps) => {
 
 	const handleBrandChange = (event: ChangeEvent<HTMLSelectElement>) => {
     setSelectedBrand(event.target.value);
-    console.log('New Brand:', event.target.value);
   };
 
 	const handleInsightTextChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
 		setInsightText(event.target.value);
-		console.log('New Insight Text:', event.target.value);
 	};
 
 	return (
