@@ -6,9 +6,10 @@ import type { Insight } from "../../schemas/insight.ts";
 type InsightsProps = {
   insights: Insight[];
   className?: string;
+	updateParent: () => void;
 };
 
-export const Insights = ({ insights, className }: InsightsProps) => {
+export const Insights = ({ insights, className, updateParent }: InsightsProps) => {
 
   const deleteInsight = async (id: number) => {
 		const response = await fetch(`/api/insights/delete/${id}`, {
@@ -22,6 +23,9 @@ export const Insights = ({ insights, className }: InsightsProps) => {
 			const errorData = await response.json();
 			throw new Error(`HTTP ERROR\nStatus: ${response.status}\nDetails: ${errorData.message || 'Unknown error'}`);
 		}
+
+		updateParent();
+		// onTrigger();
   };
 
   return (

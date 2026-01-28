@@ -2,17 +2,17 @@
 import { useEffect, useState } from "react";
 import { Header } from "../components/header/header.tsx";
 import { Insights } from "../components/insights/insights.tsx";
-import styles from "./app.module.css";
 import { Insight } from "../schemas/insight.ts";
+import styles from "./app.module.css";
 
 export const App = () => {
   const [insights, setInsights] = useState<Insight[]>([]);
 
-  useEffect(() => {
+	const updateInsights = async () =>
+	{
 		// Each operation is performed asynchronously in sequence,
-		// otherwise json is null at the time the map is applied.
-		const loadInsights = async () => {
-			const result = await fetch("/api/insights");
+		// otherwise json is null at the time data is mapped to page objects.
+		const result = await fetch("/api/insights");
 			const json = await result.json();
 
 			const updatedInsights = json.map((raw: any) =>
@@ -25,15 +25,16 @@ export const App = () => {
 			);
 			
 			setInsights(updatedInsights);
-		};
+	};
 
-		loadInsights();
+  useEffect(() => {
+		updateInsights();
   }, []);
 
   return (
     <main className={styles.main}>
       <Header />
-      <Insights className={styles.insights} insights={insights} />
+      <Insights className={styles.insights} insights={insights} updateParent={updateInsights}/>
     </main>
   );
 };
