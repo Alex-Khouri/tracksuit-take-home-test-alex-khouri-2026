@@ -9,7 +9,9 @@ type InsightsProps = {
 };
 
 export const Insights = ({ insights, className }: InsightsProps) => {
-  const deleteInsight = () => undefined;
+  const deleteInsight = () => {
+	console.log("*** INSIGHT DELETED ***")
+  };
 
   return (
     <div className={cx(className)}>

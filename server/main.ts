@@ -5,6 +5,8 @@ import * as path from "@std/path";
 import { Port } from "../lib/utils/index.ts";
 import listInsights from "./operations/list-insights.ts";
 import lookupInsight from "./operations/lookup-insight.ts";
+import createInsightTable from "./operations/create-insight-table.ts";
+import createInsight from "./operations/create-insight.ts";
 
 console.log("Loading configuration");
 
@@ -19,34 +21,91 @@ console.log(`Opening SQLite database at ${dbFilePath}`);
 await Deno.mkdir(path.dirname(dbFilePath), { recursive: true });
 const db = new Database(dbFilePath);
 
+createInsightTable({ db });
+
 console.log("Initialising server");
 
 const router = new oak.Router();
 
 router.get("/_health", (ctx) => {
-  ctx.response.body = "OK";
-  ctx.response.status = 200;
+  try {
+    ctx.response.status = 200;
+    ctx.response.body = "OK";
+  } catch (error) {
+    console.log(`INTERNAL SERVER ERROR (/_health): ${error}`);
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Server error" };
+  }
 });
 
 router.get("/insights", (ctx) => {
-  const result = listInsights({ db });
-  ctx.response.body = result;
-  ctx.response.body = 200;
+  try {
+    const result = listInsights({ db });
+    ctx.response.status = 200;
+    ctx.response.body = result;
+    console.log("/insights API processing completed successfully");
+  } catch (error) {
+    console.log(`INTERNAL SERVER ERROR (/insights): ${error}`);
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Server error" };
+  }
 });
 
 router.get("/insights/:id", (ctx) => {
-  const params = ctx.params as Record<string, any>;
-  const result = lookupInsight({ db, id: params.id });
-  ctx.response.body = result;
-  ctx.response.status = 200;
+  try {
+    const params = ctx.params as Record<string, any>;
+    const result = lookupInsight({ db, id: params.id });
+    ctx.response.status = 200;
+    ctx.response.body = result;
+  } catch (error) {
+    console.log(`INTERNAL SERVER ERROR (/insights/:id): ${error}`);
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Server error" };
+  }
 });
 
-router.get("/insights/create", (ctx) => {
-  // TODO
+router.post("/insights/create", async (ctx) => {
+  try {
+    const body = ctx.request.body;
+    const value = await body.json();
+
+    const brandValue = Number(value.brand);
+    const textValue = value.text;
+    const createdAtValue = new Date(value.createdAt);
+
+    console.log("CREATING NEW INSIGHT WITH THE FOLLOWING:");
+    console.log(`    Brand: ${brandValue}`);
+    console.log(`    Text: ${textValue}`);
+    console.log(`    Created At: ${createdAtValue}`);
+
+    // TODO: Create Insight object and add it to database
+    const result = createInsight({
+      db,
+      brand: brandValue,
+      text: textValue,
+      createdAt: createdAtValue,
+    });
+
+    ctx.response.status = 201;
+    ctx.response.body = result;
+  } catch (error) {
+    console.log(`INTERNAL SERVER ERROR (/insights/create): ${error}`);
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Server error" };
+  }
 });
 
 router.get("/insights/delete", (ctx) => {
-  // TODO
+  try {
+    // TODO: Finish this
+
+    ctx.response.status = 200;
+    ctx.response.body = { success: true };
+  } catch (error) {
+    console.log(`INTERNAL SERVER ERROR (/insights/delete): ${error}`);
+    ctx.response.status = 500;
+    ctx.response.body = { error: "Server error" };
+  }
 });
 
 const app = new oak.Application();

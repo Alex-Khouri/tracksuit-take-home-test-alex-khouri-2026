@@ -1,5 +1,5 @@
 export const createTable = `
-  CREATE TABLE insights (
+  CREATE TABLE IF NOT EXISTS insights (
     id INTEGER PRIMARY KEY ASC NOT NULL,
     brand INTEGER NOT NULL,
     createdAt TEXT NOT NULL,
@@ -10,13 +10,13 @@ export const createTable = `
 export type Row = {
   id: number;
   brand: number;
-  createdAt: string;
+  createdAt: Date;
   text: string;
 };
 
 export type Insert = {
   brand: number;
-  createdAt: string;
+  createdAt: Date;
   text: string;
 };
 
