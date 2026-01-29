@@ -4,7 +4,10 @@ import * as oak from "@oak/oak";
 import * as path from "@std/path";
 import { Port } from "../lib/utils/index.ts";
 import listInsights from "./operations/list-insights.ts";
-import lookupInsight from "./operations/lookup-insight.ts";
+import {
+  lookupInsightByContent,
+  lookupInsightByID,
+} from "./operations/lookup-insight.ts";
 import createInsightTable from "./operations/create-insight-table.ts";
 import createInsight from "./operations/create-insight.ts";
 import deleteInsight from "./operations/delete-insight.ts";
@@ -54,7 +57,7 @@ router.get("/insights", (ctx) => {
 router.get("/insights/:id", (ctx) => {
   try {
     const params = ctx.params as Record<string, any>;
-    const result = lookupInsight({ db, id: params.id });
+    const result = lookupInsightByID({ db, id: params.id });
 
     if (result === undefined) {
       ctx.response.status = 404;
@@ -79,6 +82,20 @@ router.post("/insights/create", async (ctx) => {
     const textValue = value.text;
     const createdAtValue = new Date(value.createdAt);
 
+    const preliminaryResult = lookupInsightByContent({
+      db,
+      brand: brandValue,
+      text: textValue,
+    });
+
+    if (preliminaryResult !== undefined) {
+      ctx.response.status = 409; // "Conflict"
+      ctx.response.body = {
+        error: "Client error: insight with those details already exists",
+      };
+      return;
+    }
+
     const result = createInsight({
       db,
       brand: brandValue,
@@ -98,7 +115,7 @@ router.post("/insights/create", async (ctx) => {
 router.delete("/insights/delete/:id", (ctx) => {
   try {
     const params = ctx.params as Record<string, any>;
-    const result = lookupInsight({ db, id: params.id });
+    const result = lookupInsightByID({ db, id: params.id });
 
     if (result === undefined) {
       ctx.response.status = 404;
