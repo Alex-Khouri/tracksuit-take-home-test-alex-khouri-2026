@@ -55,6 +55,12 @@ router.get("/insights/:id", (ctx) => {
   try {
     const params = ctx.params as Record<string, any>;
     const result = lookupInsight({ db, id: params.id });
+
+    if (result === undefined) {
+      ctx.response.status = 404;
+      ctx.response.body = { error: "Client error: resource not found" };
+    }
+
     ctx.response.status = 200;
     ctx.response.body = result;
   } catch (error) {
@@ -92,6 +98,13 @@ router.post("/insights/create", async (ctx) => {
 router.delete("/insights/delete/:id", (ctx) => {
   try {
     const params = ctx.params as Record<string, any>;
+    const result = lookupInsight({ db, id: params.id });
+
+    if (result === undefined) {
+      ctx.response.status = 404;
+      ctx.response.body = { error: "Client error: resource not found" };
+    }
+
     deleteInsight({ db, id: params.id });
     ctx.response.status = 200;
     ctx.response.body = { success: true };

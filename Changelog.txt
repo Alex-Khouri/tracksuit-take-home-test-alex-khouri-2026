@@ -1,0 +1,30 @@
+FEATURES
+* 'Add Insight' functionality
+	- Front-end input state management
+		> add-insight.tsx
+	- Front-end API integration
+		> add-insight.tsx
+	- Back-end API endpoint
+		> main.ts
+	- Back-end database integration
+		> create-insight.ts
+* 'Delete Insight' functionality
+	- Front-end API integration
+		> insights.tsx
+	- Back-end API endpoint
+		> main.ts
+	- Back-end database integration
+		> delete-insight.ts
+
+BUGS
+* 'Insights' table wasn't being created during application initialisation
+	- Back-end database integration
+		> create-insight-table.ts
+* 'Insights' table creation SQL query replaced existing database on every application initialisation
+	> insights.ts
+* 'Created At' property of database mapping object for 'Insights' used string data type (rather than Date)
+	> insights.ts
+* '/insights' endpoint was assigning HTTP status code to response body (rather than to its status)
+	> main.ts
+* State container for Insight objects on main front-end page was given a singleton data type
+	> app.tsx

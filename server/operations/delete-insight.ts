@@ -12,16 +12,10 @@ export default (input: Input): Insight | undefined => {
   // While it could be confusing for users to see lingering entries with IDs that they just deleted
   // (i.e. if multiple entries with the same ID were mistakenly created), it's better for those
   // entries to be visible because it could provide a clear indication of database mismanagement.
-  const [row] = input.db
+  input.db
     .sql<
     insightsTable.Row
   >`DELETE FROM insights WHERE id = ${input.id} LIMIT 1`;
-
-  if (row) {
-    const result = undefined;
-    console.log("Insight deleted!");
-    return result;
-  }
 
   return;
 };

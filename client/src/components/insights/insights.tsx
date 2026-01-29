@@ -25,7 +25,6 @@ export const Insights = ({ insights, className, updateParent }: InsightsProps) =
 		}
 
 		updateParent();
-		// onTrigger();
   };
 
   return (
