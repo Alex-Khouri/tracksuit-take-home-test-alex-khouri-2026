@@ -25,7 +25,7 @@ export const AddInsight = (props: AddInsightProps) => {
 			createdAt: dateString
 		};
 
-		const response = await fetch(`/api/insights/create`, {
+		const response = await fetch(`/api/insights`, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',

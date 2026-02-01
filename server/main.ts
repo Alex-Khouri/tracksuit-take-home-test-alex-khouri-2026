@@ -73,7 +73,7 @@ router.get("/insights/:id", (ctx) => {
   }
 });
 
-router.post("/insights/create", async (ctx) => {
+router.post("/insights", async (ctx) => {
   try {
     const body = ctx.request.body;
     const value = await body.json();
@@ -112,7 +112,7 @@ router.post("/insights/create", async (ctx) => {
   }
 });
 
-router.delete("/insights/delete/:id", (ctx) => {
+router.delete("/insights/:id", (ctx) => {
   try {
     const params = ctx.params as Record<string, any>;
     const result = lookupInsightByID({ db, id: params.id });

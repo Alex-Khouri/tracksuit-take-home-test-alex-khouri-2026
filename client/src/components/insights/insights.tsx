@@ -12,7 +12,7 @@ type InsightsProps = {
 export const Insights = ({ insights, className, updateParent }: InsightsProps) => {
 
   const deleteInsight = async (id: number) => {
-		const response = await fetch(`/api/insights/delete/${id}`, {
+		const response = await fetch(`/api/insights/${id}`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
