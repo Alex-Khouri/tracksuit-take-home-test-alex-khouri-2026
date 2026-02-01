@@ -13,18 +13,18 @@ export const App = () => {
 		// Each operation is performed asynchronously in sequence,
 		// otherwise json is null at the time data is mapped to page objects.
 		const result = await fetch("/api/insights");
-			const json = await result.json();
+		const json = await result.json();
 
-			const updatedInsights = json.map((raw: any) =>
-				Insight.parse({
-					id: raw.id,
-					brandId: raw.brand,
-					date: new Date(raw.createdAt),
-					text: raw.text,
-				})
-			);
-			
-			setInsights(updatedInsights);
+		const updatedInsights = json.map((raw: any) =>
+			Insight.parse({
+				id: raw.id,
+				brandId: raw.brand,
+				date: new Date(raw.createdAt),
+				text: raw.text,
+			})
+		);
+		
+		setInsights(updatedInsights);
 	};
 
   useEffect(() => {
